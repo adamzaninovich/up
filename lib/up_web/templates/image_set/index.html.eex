@@ -1,0 +1,28 @@
+<h2>Listing Image sets</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Token</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for image_set <- @image_sets do %>
+    <tr>
+      <td><%= image_set.name %></td>
+      <td><%= image_set.token %></td>
+
+      <td class="text-right">
+        <span><%= link "Show", to: image_set_path(@conn, :show, image_set), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: image_set_path(@conn, :edit, image_set), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: image_set_path(@conn, :delete, image_set), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Image set", to: image_set_path(@conn, :new) %></span>

@@ -18,13 +18,12 @@ defmodule UpWeb.Router do
 
     get("/", ImageSetController, :index)
     resources("/image_sets", ImageSetController)
-    resources("/images", ImageController, only: [:update, :delete])
-    create(unique_index(:image_sets, [:token]))
+    # resources("/images", ImageController, only: [:update, :delete])
   end
 
   # Other scopes may use custom stacks.
   scope "/api", UpWeb do
     pipe_through(:api)
-    resources("/images", ImageController, only: [:create])
+    # resources("/images", ImageController, only: [:create])
   end
 end

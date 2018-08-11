@@ -1,0 +1,18 @@
+<h2>Show Image set</h2>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @image_set.name %>
+  </li>
+
+  <li>
+    <strong>Token:</strong>
+    <%= @image_set.token %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: image_set_path(@conn, :edit, @image_set) %></span>
+<span><%= link "Back", to: image_set_path(@conn, :index) %></span>
