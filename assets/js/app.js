@@ -18,4 +18,21 @@ import "phoenix_html"
 // Local files can be imported directly using relative
 // paths "./socket" or full ones "web/static/js/socket".
 
-// import socket from "./socket"
+import socket from "./socket"
+
+if ($("#image-set-title")[0]) {
+  socket.connect()
+  let id = $("#image-set-title").data("imageSetId")
+
+  let channel = socket.channel("image_set:" + id, {})
+
+  channel.on("reload", payload => {
+    console.log(payload)
+    location.reload()
+  })
+
+  channel.join()
+    .receive("ok", resp => { console.log("Joined successfully", resp) })
+    .receive("error", resp => { console.log("Unable to join", resp) })
+}
+

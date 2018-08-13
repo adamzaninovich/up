@@ -20,13 +20,19 @@ defmodule UpWeb.ImageSetController do
         conn
         |> put_flash(:info, "Image set created successfully.")
         |> redirect(to: image_set_path(conn, :show, image_set))
+
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
     end
   end
 
-  def show(conn, %{"id" => id}) do
+  def show(conn, %{"id" => id, "format" => "svg"}) do
     image_set = Images.get_image_set!(id)
+    render(conn, "show.svg", image_set: image_set)
+  end
+
+  def show(conn, %{"id" => id}) do
+    image_set = Images.get_image_set!(id) |> Up.Repo.preload(:images)
     render(conn, "show.html", image_set: image_set)
   end
 
@@ -44,6 +50,7 @@ defmodule UpWeb.ImageSetController do
         conn
         |> put_flash(:info, "Image set updated successfully.")
         |> redirect(to: image_set_path(conn, :show, image_set))
+
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", image_set: image_set, changeset: changeset)
     end

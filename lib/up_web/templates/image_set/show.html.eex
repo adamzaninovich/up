@@ -1,18 +1,29 @@
-<h2>Show Image set</h2>
+<style>
+.rotate-90 {
+  margin: 20px -20px;
+    -webkit-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+            transform: rotate(90deg);
+}
+</style>
 
-<ul>
+<h2 id="image-set-title" data-image-set-id="<%= @image_set.id %>">
+  Image Set: <%= @image_set.name %>
+</h2>
 
-  <li>
-    <strong>Name:</strong>
-    <%= @image_set.name %>
-  </li>
+<div class="row">
+  <span><%= link "Edit", to: image_set_path(@conn, :edit, @image_set) %></span>
+  <span><%= link "Back", to: image_set_path(@conn, :index) %></span>
+</div>
 
-  <li>
-    <strong>Token:</strong>
-    <%= @image_set.token %>
-  </li>
+<div class="row">
+  <img src="<%= image_set_path(@conn, :show, @image_set, format: :svg) %>" alt="">
+</div>
 
-</ul>
-
-<span><%= link "Edit", to: image_set_path(@conn, :edit, @image_set) %></span>
-<span><%= link "Back", to: image_set_path(@conn, :index) %></span>
+<%= if length(@image_set.images) > 0 do %>
+  <div class="row">
+  <%= for image <- @image_set.images do %>
+    <%= UpWeb.ImageView.display_image(@conn, image, width: "150px", class: "rotate-90") %>
+  <% end %>
+  </div>
+<% end %>

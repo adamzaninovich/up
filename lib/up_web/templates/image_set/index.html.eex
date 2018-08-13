@@ -5,6 +5,7 @@
     <tr>
       <th>Name</th>
       <th>Token</th>
+      <th>Images</th>
 
       <th></th>
     </tr>
@@ -14,6 +15,7 @@
     <tr>
       <td><%= image_set.name %></td>
       <td><%= image_set.token %></td>
+      <td><%= length(image_set.images) %></td>
 
       <td class="text-right">
         <span><%= link "Show", to: image_set_path(@conn, :show, image_set), class: "btn btn-default btn-xs" %></span>

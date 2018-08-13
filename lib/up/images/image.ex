@@ -2,12 +2,11 @@ defmodule Up.Images.Image do
   use Ecto.Schema
   import Ecto.Changeset
 
-
   schema "images" do
-    field :binary_data, :binary
-    field :binary_type, :string
-    field :index, :integer
-    field :image_set_id, :id
+    field(:binary_data, :binary)
+    field(:binary_type, :string)
+    field(:index, :integer)
+    belongs_to(:image_set, Up.Images.ImageSet)
 
     timestamps()
   end

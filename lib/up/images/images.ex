@@ -6,7 +6,7 @@ defmodule Up.Images do
   import Ecto.Query, warn: false
   alias Up.Repo
 
-  alias Up.Images.ImageSet
+  alias Up.Images.{Image, ImageSet}
 
   @doc """
   Returns the list of image_sets.
@@ -18,7 +18,7 @@ defmodule Up.Images do
 
   """
   def list_image_sets do
-    Repo.all(ImageSet)
+    Repo.all(ImageSet) |> Repo.preload(:images)
   end
 
   @doc """
@@ -35,7 +35,9 @@ defmodule Up.Images do
       ** (Ecto.NoResultsError)
 
   """
-  def get_image_set!(id), do: Repo.get!(ImageSet, id)
+  def get_image_set!(id), do: Repo.get!(ImageSet, id) |> Repo.preload(:images)
+
+  def get_image!(id), do: Repo.get!(Image, id)
 
   @doc """
   Creates a image_set.
@@ -52,6 +54,45 @@ defmodule Up.Images do
   def create_image_set(attrs \\ %{}) do
     %ImageSet{}
     |> ImageSet.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def get_image_set_by_token(token) do
+    Repo.preload(Repo.one(from(is in ImageSet, where: is.token == ^token)), :images)
+  end
+
+  def create_images(image_set_token, image_uploads) do
+    set =
+      image_set_token
+      |> get_image_set_by_token()
+
+    images_data =
+      Enum.map(image_uploads, fn upload ->
+        File.read!(upload.path)
+      end)
+
+    images_data
+    |> Enum.with_index()
+    |> Enum.map(fn {image_data, index} ->
+      actual_index = length(set.images) + index
+      create_image(set, actual_index, image_data)
+    end)
+
+    {:ok, Repo.preload(set, :images, force: true)}
+  end
+
+  def create_image(set, index, data) do
+    create_image(set, %{
+      index: index,
+      binary_data: data,
+      binary_type: "jpg"
+    })
+  end
+
+  def create_image(set, attrs \\ %{}) do
+    %Image{}
+    |> Image.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:image_set, set)
     |> Repo.insert()
   end
 
